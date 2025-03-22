@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản trị viên | Hệ thống Gia Sư</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/dashboard_admin.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z" fill="white"/>
+                    </svg>
+                </div>
+                <h3>Hệ thống Gia Sư</h3>
+            </div>
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="user-details">
+                    <h5>Quản trị viên</h5>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="tab-link active" data-tab="user-manager"><a href="#"><i class="fas fa-users"></i> Quản lý tài khoản</a></li>
+                <li class="tab-link" data-tab="lesson-manager"><a href="#"><i class="fas fa-book"></i> Quản lý bài học</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- User Management Tab -->
+            <div class="tab-content active" id="user-manager">
+                <div class="header">
+                    <h2><i class="fas fa-users"></i> Quản lý tài khoản</h2>
+                    <p>Thêm, sửa, xóa tài khoản người dùng</p>
+                </div>
+
+                <!-- Alert Messages -->
+                <div class="alert-container">
+                    <div class="alert alert-success alert-dismissible fade hide" role="alert" id="success-alert">
+                        <i class="fas fa-check-circle"></i> <span id="success-message"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade hide" role="alert" id="error-alert">
+                        <i class="fas fa-exclamation-triangle"></i> <span id="error-message"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+
+                <div class="content-box">
+                    <div class="action-bar">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                            <i class="fas fa-user-plus"></i> Thêm tài khoản
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Mật khẩu</th>
+                                    <th>Lớp được phép</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table">
+                                {% for username, user in users.items() %}
+                                <tr>
+                                    <td>{{ username }}</td>
+                                    <td>{{ user.password }}</td>
+                                    <td>
+                                        {% for class_id in user.allowed_classes %}
+                                        <span class="badge bg-primary">Lớp {{ class_id }}</span>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info edit-user" data-username="{{ username }}">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </button>
+                                        <button class="btn btn-sm btn-danger delete-user" data-username="{{ username }}">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lesson Management Tab -->
+            <div class="tab-content" id="lesson-manager">
+                <div class="header">
+                    <h2><i class="fas fa-book"></i> Quản lý bài học</h2>
+                    <p>Thêm, sửa, xóa nội dung bài học</p>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#imageUploadModal">
+                        <i class="fas fa-upload"></i> Tải lên hình ảnh
+                    </button>
+                </div>
+
+                <!-- Thông tin cơ bản của bài học -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5><i class="fas fa-info-circle"></i> Thông tin bài học</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="lesson-title" class="form-label">Tiêu đề bài học</label>
+                                <input type="text" class="form-control" id="lesson-title" placeholder="Nhập tiêu đề bài học">
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Lớp</label>
+                                        <select class="form-select" id="lesson-class">
+                                            <option value="">-- Chọn lớp --</option>
+                                            <!-- Các option sẽ được thêm bằng JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Môn học</label>
+                                        <select class="form-select" id="lesson-subject" disabled>
+                                            <option value="">-- Chọn môn học --</option>
+                                            <!-- Các option sẽ được thêm bằng JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Tập sách</label>
+                                        <select class="form-select" id="lesson-book" disabled>
+                                            <option value="">-- Chọn tập --</option>
+                                            <!-- Các option sẽ được thêm bằng JavaScript -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Bài số</label>
+                                        <select class="form-select" id="lesson-number" disabled>
+                                            <option value="">-- Chọn bài --</option>
+                                            <!-- Các option sẽ được thêm bằng JavaScript -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabs điều hướng -->
+                <ul class="nav nav-tabs mb-3" id="lesson-editor-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link lesson-tab active" id="theory-tab" data-tab="theory-content" type="button">
+                            <i class="fas fa-book-open"></i> Lý thuyết
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link lesson-tab" id="exercises-tab" data-tab="exercises-content" type="button">
+                            <i class="fas fa-pencil-alt"></i> Bài tập thực hành
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link lesson-tab" id="summary-tab" data-tab="summary-content" type="button">
+                            <i class="fas fa-list-check"></i> Tóm tắt bài học
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Nội dung các tab -->
+                <div class="tab-container" id="lesson-editor-tab-content">
+                    <!-- Tab Lý thuyết -->
+                    <div class="tab-content active" id="theory-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-book-open"></i> Nội dung lý thuyết</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <textarea id="theory-editor" class="form-control" rows="12"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Bài tập thực hành -->
+                    <div class="tab-content" id="exercises-content">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5><i class="fas fa-pencil-alt"></i> Bài tập thực hành</h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="addExerciseDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-plus"></i> Thêm bài tập
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="addExerciseDropdown">
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="comparison">
+                                                <i class="fas fa-arrows-alt-h me-2"></i> So sánh (>,<,=)
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="mentalMath">
+                                                <i class="fas fa-calculator me-2"></i> Tính nhẩm
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="trueFalse">
+                                                <i class="fas fa-check-circle me-2"></i> Đúng/Sai (Đ/S)
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="wordProblem">
+                                                <i class="fas fa-align-left me-2"></i> Bài toán có lời văn
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="ordering">
+                                                <i class="fas fa-sort me-2"></i> Sắp xếp theo thứ tự
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="fillInBlanks">
+                                                <i class="fas fa-edit me-2"></i> Điền vào chỗ trống
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="imageWordProblemMultiAnswer">
+                                                <i class="fas fa-image me-2"></i> Bài toán có hình ảnh (nhiều đáp án)
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button class="dropdown-item exercise-template" data-type="imageWordProblemMultiChoice">
+                                                <i class="fas fa-check-square me-2"></i> Bài toán có hình ảnh (chọn đáp án)
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="exercise-blocks-container">
+                                    <!-- Các khối bài tập sẽ được thêm vào đây -->
+                                </div>
+                                
+                                <div class="text-center mt-3 empty-exercises-message">
+                                    <p class="text-muted">Chưa có bài tập nào. Vui lòng chọn loại bài tập để thêm.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Tóm tắt bài học -->
+                    <div class="tab-content" id="summary-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="fas fa-list-check"></i> Tóm tắt bài học</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <textarea id="summary-editor" class="form-control" rows="8"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Các nút tác vụ -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-danger" id="delete-lesson-btn" disabled>
+                        <i class="fas fa-trash"></i> Xóa bài học
+                    </button>
+                    <div>
+                        <button type="button" class="btn btn-secondary me-2" id="preview-lesson-btn" disabled>
+                            <i class="fas fa-eye"></i> Xem trước
+                        </button>
+                        <button type="button" class="btn btn-primary" id="save-lesson-btn" disabled>
+                            <i class="fas fa-save"></i> Lưu bài học
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Thêm tài khoản mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-user-form">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lớp được phép truy cập</label>
+                            <div class="class-checkboxes">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="class1">
+                                    <label class="form-check-label" for="class1">Lớp 1</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" id="class2">
+                                    <label class="form-check-label" for="class2">Lớp 2</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="class3">
+                                    <label class="form-check-label" for="class3">Lớp 3</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="class4">
+                                    <label class="form-check-label" for="class4">Lớp 4</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="class5">
+                                    <label class="form-check-label" for="class5">Lớp 5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="add-user-btn">Thêm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa tài khoản</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-user-form">
+                        <input type="hidden" id="edit-username">
+                        <div class="mb-3">
+                            <label for="edit-username-display" class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="edit-username-display" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-password" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="edit-password" placeholder="Để trống nếu không thay đổi">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lớp được phép truy cập</label>
+                            <div class="class-checkboxes">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="edit-class1">
+                                    <label class="form-check-label" for="edit-class1">Lớp 1</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" id="edit-class2">
+                                    <label class="form-check-label" for="edit-class2">Lớp 2</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="edit-class3">
+                                    <label class="form-check-label" for="edit-class3">Lớp 3</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="edit-class4">
+                                    <label class="form-check-label" for="edit-class4">Lớp 4</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="edit-class5">
+                                    <label class="form-check-label" for="edit-class5">Lớp 5</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="update-user-btn">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Preview Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Xem trước bài học</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="preview-content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div class="modal fade" id="imageUploadModal" tabindex="-1" aria-labelledby="imageUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageUploadModalLabel">Tải lên hình ảnh</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="image-upload-form" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="image-file" class="form-label">Chọn hình ảnh</label>
+                            <input type="file" class="form-control" id="image-file" name="image" accept="image/*" required>
+                            <div class="form-text">Chỉ chấp nhận các file hình ảnh (JPG, PNG, GIF)</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image-subfolder" class="form-label">Thư mục (tùy chọn)</label>
+                            <input type="text" class="form-control" id="image-subfolder" name="subfolder" placeholder="VD: math, vietnamese">
+                            <div class="form-text">Để trống nếu muốn lưu vào thư mục gốc images/</div>
+                        </div>
+                        <div class="mb-3" id="image-preview-container" style="display: none;">
+                            <label class="form-label">Xem trước:</label>
+                            <div class="text-center">
+                                <img id="image-preview" src="#" alt="Xem trước hình ảnh" class="img-fluid" style="max-height: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+                            </div>
+                        </div>
+                        <div class="alert alert-success" id="image-upload-success" style="display: none;">
+                            <i class="fas fa-check-circle"></i> Tải lên thành công!
+                            <div>Đường dẫn hình ảnh: <span id="image-path"></span></div>
+                        </div>
+                        <div class="alert alert-danger" id="image-upload-error" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i> <span id="image-error-message"></span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="upload-image-btn">Tải lên</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.4.0/tinymce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard_admin.js') }}"></script>
+</body>
+</html>

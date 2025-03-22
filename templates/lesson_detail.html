@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết bài học | Hệ thống Gia Sư</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/dashboard_users.css') }}" rel="stylesheet">
+    <style>
+        .answer-detail {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .answer-detail.correct {
+            border-left: 4px solid #28a745;
+        }
+        .answer-detail.incorrect {
+            border-left: 4px solid #dc3545;
+        }
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .status-badge.correct {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+        .status-badge.incorrect {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z" fill="white"/>
+                    </svg>
+                </div>
+                <h3>Hệ thống Gia Sư</h3>
+            </div>
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <h5>Xin chào, <span id="username">{{ username }}</span>!</h5>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('dashboard_users') }}"><i class="fas fa-book"></i> Nội dung học</a></li>
+                <li class="active"><a href="#progress"><i class="fas fa-chart-line"></i> Tiến trình học tập</a></li>
+                <li><a href="#achievements"><i class="fas fa-medal"></i> Thành tích</a></li>
+                <li><a href="#settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>
+                        <i class="fas fa-book"></i> Chi tiết bài học - {{ subject_name }} {{ lesson_title }}
+                    </h2>
+                    <a href="{{ url_for('dashboard_users') }}?tab=progress" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+                <p>Điểm số: <span class="badge bg-primary">{{ score|round(1) }}/10</span></p>
+            </div>
+
+            <!-- Thêm phần này vào lesson_detail.html -->
+            <div class="mb-3">
+                <h4>Lịch sử làm bài</h4>
+                <div class="list-group">
+                    {% for attempt in all_attempts %}
+                        <a href="{{ url_for('lesson_detail', class=attempt.class_id, subject=attempt.subject, book=attempt.book, lesson=attempt.lesson, attempt_id=attempt.attempt_id) }}" 
+                        class="list-group-item list-group-item-action {% if current_attempt and current_attempt.attempt_id == attempt.attempt_id %}active{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Lần {{loop.revindex}}</strong> - {{ attempt.timestamp }}
+                                </div>
+                                <div>
+                                    <span class="badge bg-primary">{{ attempt.score|round(1) }}/10</span>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="content-box">
+                <h3 class="mb-4">Chi tiết các câu trả lời</h3>
+                
+                {% if answers_detail|length > 0 %}
+                    {% for answer in answers_detail %}
+                        <div class="answer-detail {% if answer.is_correct %}correct{% else %}incorrect{% endif %}">
+                            <div class="answer-header">
+                                <strong>Câu hỏi {{ loop.index }}</strong>
+                                <span class="status-badge {% if answer.is_correct %}correct{% else %}incorrect{% endif %}">
+                                    {% if answer.is_correct %}Đúng{% else %}Sai{% endif %}
+                                </span>
+                            </div>
+                            <p>{{ answer.problem_text }}</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted">Câu trả lời của học sinh:</small>
+                                    <div class="mt-1">{{ answer.user_answer or "(Không có)" }}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted">Đáp án đúng:</small>
+                                    <div class="mt-1">{{ answer.correct_answer }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">Chưa có thông tin chi tiết về các câu trả lời</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

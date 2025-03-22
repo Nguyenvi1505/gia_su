@@ -1,0 +1,278 @@
+{
+    "hocsinh1": {
+        "completed_lessons": [
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 1,
+                "completed_date": "2025-03-22"
+            },
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 2,
+                "completed_date": "2025-03-22"
+            }
+        ],
+        "scores": [
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 1,
+                "score": 5.0,
+                "answers_detail": [
+                    {
+                        "problem_id": "problem-0-0",
+                        "problem_type": "comparison",
+                        "problem_text": "5 + 3 ? 5",
+                        "user_answer": ">",
+                        "correct_answer": ">",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-1-0",
+                        "problem_type": "mentalMath",
+                        "problem_text": "5 + 3 = ?",
+                        "user_answer": "8",
+                        "correct_answer": "8",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-2-0",
+                        "problem_type": "trueFalse",
+                        "problem_text": "5 + 3 > 9",
+                        "user_answer": "Đ",
+                        "correct_answer": "S",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-3-0",
+                        "problem_type": "wordProblem",
+                        "problem_text": "Mai có 5 quả táo, Vĩ cho Mai 3 qủa táo. Hỏi Mai có mấy quả táo?",
+                        "user_answer": "1",
+                        "correct_answer": "8",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-4-0",
+                        "problem_type": "ordering",
+                        "problem_text": "Sắp xếp theo thứ tự tăng dần: 5, 3, 9, 1, 4.",
+                        "user_answer": "1, 3, 4, 5, 9",
+                        "correct_answer": "[\"1\", \"3\", \"4\", \"5\", \"9\"]",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-5-0",
+                        "problem_type": "fillInBlanks",
+                        "problem_text": "363 = 300 + ? + ?",
+                        "user_answer": "60, 3",
+                        "correct_answer": "[\"60\", \"3\"]",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-6-0",
+                        "problem_type": "imageWordProblemMultiAnswer",
+                        "problem_text": "Hãy quan sát hình ảnh và tìm đáp án đúng",
+                        "user_answer": "1, 3, 2",
+                        "correct_answer": "[\"1\", \"2\", \"3\"]",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-7-0",
+                        "problem_type": "imageWordProblemMultiChoice",
+                        "problem_text": "Chọn đáp án thích hợp",
+                        "user_answer": "3, 3, 4",
+                        "correct_answer": "[\"3\", \"4\", \"5\"]",
+                        "is_correct": false
+                    }
+                ],
+                "date": "2025-03-22",
+                "timestamp": "2025-03-22 21:18:08",
+                "attempt_id": "20250322211808"
+            },
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 2,
+                "score": 10.0,
+                "answers_detail": [
+                    {
+                        "problem_id": "problem-0-0",
+                        "problem_type": "comparison",
+                        "problem_text": "5 + 4 ? 7",
+                        "user_answer": ">",
+                        "correct_answer": ">",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-1-0",
+                        "problem_type": "mentalMath",
+                        "problem_text": "1 + 2 = ?",
+                        "user_answer": "3",
+                        "correct_answer": "3",
+                        "is_correct": true
+                    }
+                ],
+                "date": "2025-03-22",
+                "timestamp": "2025-03-22 21:20:17",
+                "attempt_id": "20250322212017"
+            }
+        ],
+        "study_sessions": [
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 1,
+                "duration": 1,
+                "date": "2025-03-22"
+            },
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 2,
+                "duration": 1,
+                "date": "2025-03-22"
+            }
+        ],
+        "score_history": [
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 1,
+                "score": 5.0,
+                "answers_detail": [
+                    {
+                        "problem_id": "problem-0-0",
+                        "problem_type": "comparison",
+                        "problem_text": "5 + 3 ? 5",
+                        "user_answer": ">",
+                        "correct_answer": ">",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-1-0",
+                        "problem_type": "mentalMath",
+                        "problem_text": "5 + 3 = ?",
+                        "user_answer": "8",
+                        "correct_answer": "8",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-2-0",
+                        "problem_type": "trueFalse",
+                        "problem_text": "5 + 3 > 9",
+                        "user_answer": "Đ",
+                        "correct_answer": "S",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-3-0",
+                        "problem_type": "wordProblem",
+                        "problem_text": "Mai có 5 quả táo, Vĩ cho Mai 3 qủa táo. Hỏi Mai có mấy quả táo?",
+                        "user_answer": "1",
+                        "correct_answer": "8",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-4-0",
+                        "problem_type": "ordering",
+                        "problem_text": "Sắp xếp theo thứ tự tăng dần: 5, 3, 9, 1, 4.",
+                        "user_answer": "1, 3, 4, 5, 9",
+                        "correct_answer": "[\"1\", \"3\", \"4\", \"5\", \"9\"]",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-5-0",
+                        "problem_type": "fillInBlanks",
+                        "problem_text": "363 = 300 + ? + ?",
+                        "user_answer": "60, 3",
+                        "correct_answer": "[\"60\", \"3\"]",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-6-0",
+                        "problem_type": "imageWordProblemMultiAnswer",
+                        "problem_text": "Hãy quan sát hình ảnh và tìm đáp án đúng",
+                        "user_answer": "1, 3, 2",
+                        "correct_answer": "[\"1\", \"2\", \"3\"]",
+                        "is_correct": false
+                    },
+                    {
+                        "problem_id": "problem-7-0",
+                        "problem_type": "imageWordProblemMultiChoice",
+                        "problem_text": "Chọn đáp án thích hợp",
+                        "user_answer": "3, 3, 4",
+                        "correct_answer": "[\"3\", \"4\", \"5\"]",
+                        "is_correct": false
+                    }
+                ],
+                "date": "2025-03-22",
+                "timestamp": "2025-03-22 21:18:08",
+                "attempt_id": "20250322211808"
+            },
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 2,
+                "score": 10.0,
+                "answers_detail": [
+                    {
+                        "problem_id": "problem-0-0",
+                        "problem_type": "comparison",
+                        "problem_text": "5 + 4 ? 7",
+                        "user_answer": ">",
+                        "correct_answer": ">",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-1-0",
+                        "problem_type": "mentalMath",
+                        "problem_text": "1 + 2 = ?",
+                        "user_answer": "3",
+                        "correct_answer": "3",
+                        "is_correct": true
+                    }
+                ],
+                "date": "2025-03-22",
+                "timestamp": "2025-03-22 21:18:45",
+                "attempt_id": "20250322211845"
+            },
+            {
+                "class_id": 1,
+                "subject": "math",
+                "book": 1,
+                "lesson": 2,
+                "score": 10.0,
+                "answers_detail": [
+                    {
+                        "problem_id": "problem-0-0",
+                        "problem_type": "comparison",
+                        "problem_text": "5 + 4 ? 7",
+                        "user_answer": ">",
+                        "correct_answer": ">",
+                        "is_correct": true
+                    },
+                    {
+                        "problem_id": "problem-1-0",
+                        "problem_type": "mentalMath",
+                        "problem_text": "1 + 2 = ?",
+                        "user_answer": "3",
+                        "correct_answer": "3",
+                        "is_correct": true
+                    }
+                ],
+                "date": "2025-03-22",
+                "timestamp": "2025-03-22 21:20:17",
+                "attempt_id": "20250322212017"
+            }
+        ]
+    }
+}

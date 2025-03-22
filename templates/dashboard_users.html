@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển | Hệ thống Gia Sư</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/dashboard_users.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/learning_progress.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z" fill="white"/>
+                    </svg>
+                </div>
+                <h3>Hệ thống Gia Sư</h3>
+            </div>
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <h5>Xin chào, <span id="username">{{ session['user'] }}</span>!</h5>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="active"><a href="#content" data-tab="content"><i class="fas fa-book"></i> Nội dung học</a></li>
+                <li><a href="#progress" data-tab="progress"><i class="fas fa-chart-line"></i> Tiến trình học tập</a></li>
+                <li><a href="#achievements" data-tab="achievements"><i class="fas fa-medal"></i> Thành tích</a></li>
+                <li><a href="#settings" data-tab="settings"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                <li><a href="{{ url_for('logout') }}" id="logout-link"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2><i class="fas fa-book"></i> Nội dung học tập</h2>
+                <p>Vui lòng chọn nội dung bạn muốn học</p>
+            </div>
+
+            <div class="content-selector">
+                <!-- Thông báo lỗi -->
+                <div id="access-error" class="alert alert-danger hidden">
+                    <i class="fas fa-exclamation-triangle"></i> Bạn không có quyền truy cập vào nội dung của lớp này.
+                </div>
+
+                <!-- Step 1: Chọn lớp -->
+                <div class="selection-step" id="step-class">
+                    <h3>Bước 1: Chọn lớp học</h3>
+                    <div class="selection-items">
+                        <div class="selection-item" data-value="1">
+                            <div class="selection-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="selection-title">Lớp 1</div>
+                        </div>
+                        <div class="selection-item" data-value="2">
+                            <div class="selection-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="selection-title">Lớp 2</div>
+                        </div>
+                        <div class="selection-item" data-value="3">
+                            <div class="selection-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="selection-title">Lớp 3</div>
+                        </div>
+                        <div class="selection-item" data-value="4">
+                            <div class="selection-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="selection-title">Lớp 4</div>
+                        </div>
+                        <div class="selection-item" data-value="5">
+                            <div class="selection-icon">
+                                <i class="fas fa-child"></i>
+                            </div>
+                            <div class="selection-title">Lớp 5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Chọn môn học (mặc định ẩn) -->
+                <div class="selection-step hidden" id="step-subject">
+                    <h3>Bước 2: Chọn môn học</h3>
+                    <div class="selection-items">
+                        <div class="selection-item" data-value="math">
+                            <div class="selection-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="selection-title">Toán</div>
+                        </div>
+                        <div class="selection-item" data-value="math_exercises">
+                            <div class="selection-icon">
+                                <i class="fas fa-calculator"></i>
+                            </div>
+                            <div class="selection-title">Bài tập Toán</div>
+                        </div>
+                        <div class="selection-item" data-value="vietnamese">
+                            <div class="selection-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="selection-title">Tiếng Việt</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary back-button" data-step="class">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                </div>
+
+                <!-- Step 3: Chọn tập sách (mặc định ẩn) -->
+                <div class="selection-step hidden" id="step-book">
+                    <h3>Bước 3: Chọn tập sách</h3>
+                    <div class="selection-items">
+                        <div class="selection-item" data-value="1">
+                            <div class="selection-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="selection-title">Tập 1</div>
+                        </div>
+                        <div class="selection-item" data-value="2">
+                            <div class="selection-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="selection-title">Tập 2</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary back-button" data-step="subject">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                </div>
+
+                <!-- Step 4: Chọn bài học (mặc định ẩn) -->
+                <div class="selection-step hidden" id="step-lesson">
+                    <h3>Bước 4: Chọn bài học</h3>
+                    <div class="lessons-container" id="lessons-list">
+                        <!-- Bài học sẽ được thêm bằng JavaScript dựa vào các lựa chọn trước đó -->
+                    </div>
+                    <button class="btn btn-outline-secondary back-button" data-step="book">
+                        <i class="fas fa-arrow-left"></i> Quay lại
+                    </button>
+                </div>
+
+                <!-- Hiển thị trạng thái lựa chọn hiện tại -->
+                <div class="current-selection">
+                    <h4>Lựa chọn của bạn:</h4>
+                    <div class="selection-path">
+                        <span id="selected-class">--</span> >
+                        <span id="selected-subject">--</span> >
+                        <span id="selected-book">--</span> >
+                        <span id="selected-lesson">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Tiến trình học tập -->
+            <div class="learning-progress-section">
+                <div class="header">
+                    <h2><i class="fas fa-chart-line"></i> Tiến trình học tập</h2>
+                    <p>Theo dõi quá trình học tập của bạn</p>
+                </div>
+
+                <div class="content-box">
+                    <!-- Thông tin tổng quan -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-card-title">Bài học đã học</div>
+                                <div class="stat-card-value" id="lessons-completed">0/20</div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-card-title">Điểm trung bình</div>
+                                <div class="stat-card-value" id="average-score">0/10</div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-card-title">Thời gian học</div>
+                                <div class="stat-card-value" id="study-time">0 giờ</div>
+                                <div class="stat-card-subtitle">Trong tuần này</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="stat-card-title">Chuỗi ngày học</div>
+                                <div class="stat-card-value" id="streak-days">0 ngày</div>
+                                <div class="stat-card-subtitle">Học liên tục</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Biểu đồ tiến trình theo môn học -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="chart-container">
+                                <h4>Tiến trình theo môn học</h4>
+                                <canvas id="subjectProgressChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="chart-container">
+                                <h4>Thời gian học theo môn</h4>
+                                <canvas id="studyTimeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lịch sử học tập gần đây -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>Lịch sử học tập gần đây</h4>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ngày</th>
+                                            <th>Môn học</th>
+                                            <th>Bài học</th>
+                                            <th>Thời gian</th>
+                                            <th>Điểm số</th>
+                                            <th>Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="learning-history">
+                                        <tr>
+                                            <td colspan="6" class="text-center">Chưa có dữ liệu</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm các phần tử sau vào thẻ body -->
+    <script>
+        // Truyền dữ liệu từ Flask sang JavaScript
+        var allowedClasses = {{ allowed_classes|tojson }};
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard_users.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/learning_progress.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Xử lý chuyển tab khi click vào menu
+            const menuItems = document.querySelectorAll('.nav-menu li a');
+            
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // First check if this is the logout link before preventing default
+                    if (this.getAttribute('href') === '{{ url_for("logout") }}') {
+                        return; // Allow logout link to work normally
+                    }
+                    
+                    // Prevent default behavior for non-logout links
+                    e.preventDefault();
+                    
+                    // Bỏ active từ tất cả các menu
+                    menuItems.forEach(mi => mi.parentElement.classList.remove('active'));
+                    
+                    // Thêm active vào menu hiện tại
+                    this.parentElement.classList.add('active');
+                    
+                    // Lấy tab cần hiển thị
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Ẩn tất cả các tab
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.style.display = 'none';
+                    });
+                    
+                    // Hiển thị tab được chọn
+                    const selectedTab = document.getElementById(tabId + '-tab');
+                    if (selectedTab) {
+                        selectedTab.style.display = 'block';
+                    }
+                    
+                    // Nếu là tab tiến trình học tập, tải dữ liệu
+                    if (tabId === 'content') {
+                        // Hiển thị phần content selector
+                        document.querySelector('.content-selector').style.display = 'block';
+                        // Ẩn phần progress nếu đang hiển thị
+                        document.querySelector('.learning-progress-section').style.display = 'none';
+                    } else if (tabId === 'progress') {
+                        // Hiển thị tab tiến trình học tập
+                        document.querySelector('.learning-progress-section').style.display = 'block';
+                        // Tải dữ liệu tiến trình học tập
+                        loadLearningProgress();
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kiểm tra xem URL có tham số tab không
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            
+            // Nếu có tham số tab=progress, chuyển sang tab tiến trình học tập
+            if (tabParam === 'progress') {
+                // Tìm tab tiến trình học tập
+                const progressTab = document.querySelector('.nav-menu li a[href="#progress"]');
+                if (progressTab) {
+                    // Kích hoạt sự kiện click để mở tab
+                    progressTab.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

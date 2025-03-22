@@ -1,0 +1,117 @@
+{
+    "title": "Bài 1",
+    "sections": {
+        "theory": {
+            "content": "<p>Nội dung l&yacute; thuyết...</p>"
+        },
+        "exercises": {
+            "exerciseBlocks": [
+                {
+                    "type": "comparison",
+                    "title": "So sánh (>,<,=)",
+                    "problems": [
+                        {
+                            "leftSide": "5 + 3",
+                            "correctAnswer": ">",
+                            "rightSide": "5",
+                            "explanation": "5 + 3 = 8\n8 > 5"
+                        }
+                    ]
+                },
+                {
+                    "type": "mentalMath",
+                    "title": "Tính nhẩm",
+                    "problems": [
+                        {
+                            "question": "5 + 3 = ?",
+                            "correctAnswer": "8",
+                            "explanation": "5 + 3 = 8"
+                        }
+                    ]
+                },
+                {
+                    "type": "trueFalse",
+                    "title": "Đúng/Sai (Đ/S)",
+                    "problems": [
+                        {
+                            "statement": "5 + 3 > 9",
+                            "correctAnswer": "S",
+                            "explanation": "5 + 3 = 8\n8 > 9"
+                        }
+                    ]
+                },
+                {
+                    "type": "wordProblem",
+                    "title": "Bài toán có lời văn",
+                    "problems": [
+                        {
+                            "text": "Mai có 5 quả táo, Vĩ cho Mai 3 qủa táo. Hỏi Mai có mấy quả táo?",
+                            "correctAnswer": "8",
+                            "explanation": "Số quả táo Mai có là:\n      5 + 3 = 8 (quả táo)\n   Đáp số: 8 (quả táo)"
+                        }
+                    ]
+                },
+                {
+                    "type": "ordering",
+                    "title": "Sắp xếp theo thứ tự",
+                    "problems": [
+                        {
+                            "text": "Sắp xếp theo thứ tự tăng dần: 5, 3, 9, 1, 4.",
+                            "options": "",
+                            "correctAnswer": [
+                                "1",
+                                "3",
+                                "4",
+                                "5",
+                                "9"
+                            ],
+                            "explanation": "1 < 3 < 4 < 5 < 9"
+                        }
+                    ]
+                },
+                {
+                    "type": "fillInBlanks",
+                    "title": "Điền vào chỗ trống",
+                    "problems": [
+                        {
+                            "question": "363 = 300 + ? + ?",
+                            "blanks": "Vị trí 1\nVị trí 2",
+                            "answers": "60\n3",
+                            "explanation": " 363 = 300 + 60 + 3"
+                        }
+                    ]
+                },
+                {
+                    "type": "imageWordProblemMultiAnswer",
+                    "title": "Bài toán có hình ảnh (nhiều đáp án)",
+                    "problems": [
+                        {
+                            "text": "Hãy quan sát hình ảnh và tìm đáp án đúng",
+                            "image_src": "math/Screenshot_2025-03-17_115958.png",
+                            "blanks": "Chọn 1\nChọn 2\nChọn 3",
+                            "answers": "1\n2\n3",
+                            "explanation": ""
+                        }
+                    ]
+                },
+                {
+                    "type": "imageWordProblemMultiChoice",
+                    "title": "Bài toán có hình ảnh (chọn đáp án)",
+                    "problems": [
+                        {
+                            "text": "Chọn đáp án thích hợp",
+                            "image_src": "math/Screenshot_2025-03-17_115958.png",
+                            "questions": "Chọn 3\nChọn 4\nChọn 5",
+                            "options_list": "3, 4, 5\n3, 4, 5\n3, 4, 5",
+                            "correct_answers": "3\n4\n5",
+                            "explanation": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        "summary": {
+            "content": "<p>T&oacute;m tắt b&agrave;i học...</p>"
+        }
+    }
+}

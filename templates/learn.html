@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài học | Hệ thống Gia Sư</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="{{ url_for('static', filename='css/learn.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/dashboard_users.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="learn-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3M18.82 9L12 12.72L5.18 9L12 5.28L18.82 9M17 16L12 18.72L7 16V12.27L12 15L17 12.27V16Z" fill="white"/>
+                    </svg>
+                </div>
+                <h3>Hệ thống Gia Sư</h3>
+            </div>
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <h5>Xin chào, <span id="username">{{ session['user'] }}</span>!</h5>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="active"><a href="{{ url_for('dashboard_users') }}"><i class="fas fa-book"></i> Nội dung học</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Tiến độ học tập</a></li>
+                <li><a href="#"><i class="fas fa-medal"></i> Thành tích</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Cài đặt</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="breadcrumb">
+                    <a href="{{ url_for('dashboard_users') }}"><i class="fas fa-home"></i></a> /
+                    <span>Lớp {{ class_id }}</span> /
+                    <span>
+                    {% if subject == 'math' %}
+                        Toán
+                    {% elif subject == 'math_exercises' %}
+                        Bài tập Toán
+                    {% else %}
+                        Tiếng Việt
+                    {% endif %}
+                    </span> /
+                    <span>Tập {{ book }}</span> /
+                    <span>Bài {{ lesson }}</span>
+                </div>
+                <h2>
+                    {% if subject == 'math' %}
+                        Toán
+                    {% elif subject == 'math_exercises' %}
+                        Bài tập Toán
+                    {% else %}
+                        Tiếng Việt
+                    {% endif %}
+                    - Lớp {{ class_id }} - Tập {{ book }} - Bài {{ lesson }}
+                </h2>
+            </div>
+
+            <div class="lesson-content">
+                <!-- Tải nội dung bài học từ template riêng -->
+                {% include lesson_template %}
+                
+                <!-- Nút điều hướng -->
+                <div class="navigation-buttons">
+                    <button class="btn btn-outline-primary" id="prev-lesson">
+                        <i class="fas fa-arrow-left"></i> Bài trước
+                    </button>
+                    <button class="btn btn-outline-primary" id="next-lesson">
+                        Bài tiếp theo <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script để điều hướng đến bài học trước/sau
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentClass = '{{ class_id }}';
+            const currentSubject = '{{ subject }}';
+            const currentBook = '{{ book }}';
+            const currentLesson = parseInt('{{ lesson }}');
+            
+            const prevButton = document.getElementById('prev-lesson');
+            const nextButton = document.getElementById('next-lesson');
+            
+            // Xử lý nút bài học trước
+            prevButton.addEventListener('click', function() {
+                if (currentLesson > 1) {
+                    window.location.href = `/learn?class=${currentClass}&subject=${currentSubject}&book=${currentBook}&lesson=${currentLesson - 1}`;
+                }
+            });
+            
+            // Xử lý nút bài học sau
+            nextButton.addEventListener('click', function() {
+                window.location.href = `/learn?class=${currentClass}&subject=${currentSubject}&book=${currentBook}&lesson=${currentLesson + 1}`;
+            });
+            
+            // Vô hiệu hóa nút bài học trước nếu đang ở bài đầu tiên
+            if (currentLesson <= 1) {
+                prevButton.classList.add('disabled');
+            }
+        });
+    </script>
+</body>
+</html>

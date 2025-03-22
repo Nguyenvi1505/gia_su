@@ -1,0 +1,35 @@
+{
+    "admin": {
+        "password": "123456",
+        "allowed_classes": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    "giaosu": {
+        "password": "matkhau123",
+        "allowed_classes": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    "hocsinh1": {
+        "password": "password",
+        "allowed_classes": [
+            1,
+            2
+        ]
+    },
+    "hocsinh2": {
+        "password": "123456",
+        "allowed_classes": [
+            2
+        ]
+    }
+}

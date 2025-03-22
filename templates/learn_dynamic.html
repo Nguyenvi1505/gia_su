@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học tập | Hệ thống Gia Sư</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        
+        .lesson-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .lesson-section {
+            margin-bottom: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .exercise-container {
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+        
+        .answer-input {
+            width: 50px;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .word-problem {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .problem-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .problem-item.correct {
+            border: 2px solid #28a745;
+        }
+        
+        .problem-item.incorrect {
+            border: 2px solid #dc3545;
+        }
+        
+        .solution {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border-left: 4px solid #17a2b8;
+            white-space: pre-wrap;
+        }
+        
+        .submit-answers {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .show-solutions {
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .back-button {
+            margin-top: 30px;
+        }
+        
+        .navbar {
+            margin-bottom: 20px;
+        }
+        
+        .explanation-content {
+            margin-left: 0;
+            display: inline-block;
+            white-space: pre-line;
+        }
+        
+        .fill-in-blank-input.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .fill-in-blank-input.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .correct-answer {
+            display: none;
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap"></i> Hệ thống Gia Sư
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard_users') }}">
+                            <i class="fas fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-user"></i> {{ session['user'] }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Nội dung bài học -->
+    <div class="container">
+        <!-- Hiển thị nội dung bài học từ HTML đã tạo -->
+        {{ lesson_html|safe }}
+        
+        <!-- Nút quay lại -->
+        <div class="text-center back-button">
+            <a href="{{ url_for('dashboard_users') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Khởi tạo biến theo dõi thời gian
+        let startTime = Date.now();
+        let isActive = true;
+        let totalTime = 0;
+        let lastUpdateTime = startTime;
+
+        // Hàm giúp debug thời gian học
+        function logStudyTime() {
+            const currentTime = Date.now();
+            const elapsedMinutes = ((currentTime - startTime) / 1000 / 60).toFixed(2);
+            console.log(`Đã học được ${elapsedMinutes} phút`);
+        }
+
+        // Log thời gian mỗi 1 phút để debug
+        const logInterval = setInterval(logStudyTime, 60000);
+
+        // Bắt sự kiện khi người dùng chuyển tab hoặc cửa sổ
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                // Người dùng rời tab, dừng tính thời gian
+                console.log('Người dùng rời tab, dừng tính thời gian');
+                isActive = false;
+                // Cộng dồn thời gian đã học (ms to minutes)
+                const sessionTime = (Date.now() - startTime) / 1000 / 60;
+                totalTime += sessionTime;
+                console.log(`Đã cộng ${sessionTime.toFixed(2)} phút vào tổng thời gian học`);
+                console.log(`Tổng thời gian học hiện tại: ${totalTime.toFixed(2)} phút`);
+            } else {
+                // Người dùng quay lại tab, bắt đầu tính giờ lại
+                console.log('Người dùng quay lại tab, bắt đầu tính thời gian lại');
+                isActive = true;
+                startTime = Date.now();
+            }
+        });
+
+        // Hàm gửi thời gian học
+        function sendStudyTime(minutesLearned) {
+            if (minutesLearned <= 0) return;
+            
+            console.log(`Gửi thời gian học: ${minutesLearned} phút`);
+            
+            return fetch('/api/update_study_time', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    class_id: {{ class_id }},
+                    subject: "{{ subject }}",
+                    book: {{ book }},
+                    lesson: {{ lesson }},
+                    duration: minutesLearned
+                })
+            });
+        }
+
+        // Tính toán tổng thời gian học
+        function calculateTotalTime() {
+            let total = totalTime;
+            if (isActive) {
+                total += (Date.now() - startTime) / 1000 / 60;
+            }
+            return Math.round(total);
+        }
+
+        // Gửi dữ liệu thời gian học khi người dùng rời trang
+        window.addEventListener('beforeunload', function(e) {
+            // Hủy bỏ interval để tránh log không cần thiết
+            clearInterval(logInterval);
+            
+            // Tính toán thời gian học
+            const minutesLearned = calculateTotalTime();
+            console.log(`Khi rời trang: tổng thời gian học là ${minutesLearned} phút`);
+            
+            if (minutesLearned > 0) {
+                // Dùng sendBeacon để đảm bảo dữ liệu được gửi khi trang đóng
+                navigator.sendBeacon('/api/update_study_time', JSON.stringify({
+                    class_id: {{ class_id }},
+                    subject: "{{ subject }}",
+                    book: {{ book }},
+                    lesson: {{ lesson }},
+                    duration: minutesLearned
+                }));
+            }
+        });
+
+        // Xử lý nút quay lại
+        document.querySelector('.back-button a').addEventListener('click', function(e) {
+            // Tính toán thời gian học
+            const minutesLearned = calculateTotalTime();
+            console.log(`Khi nhấn quay lại: tổng thời gian học là ${minutesLearned} phút`);
+            
+            // Chỉ gửi nếu có thời gian học
+            if (minutesLearned > 0) {
+                // Tắt hành vi mặc định để đảm bảo dữ liệu được gửi
+                e.preventDefault();
+                
+                // Gửi dữ liệu thời gian học
+                sendStudyTime(minutesLearned)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Kết quả từ server:', data);
+                        // Chuyển hướng sau khi gửi thành công
+                        window.location.href = "{{ url_for('dashboard_users') }}";
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        // Vẫn chuyển hướng ngay cả khi có lỗi
+                        window.location.href = "{{ url_for('dashboard_users') }}";
+                    });
+            }
+        });
+
+        // Hàm kiểm tra câu trả lời cho các loại bài tập thông thường
+        function checkAnswers(exerciseBlock) {
+            const problemItems = exerciseBlock.querySelectorAll('.problem-item');
+            let allCorrect = true;
+            
+            problemItems.forEach(item => {
+                const correctAnswer = item.getAttribute('data-correct');
+                const userInput = item.querySelector('input').value.trim();
+                const feedback = item.querySelector('.feedback');
+                
+                if(userInput.toLowerCase() === correctAnswer.toLowerCase()) {
+                    feedback.textContent = 'Đúng!';
+                    feedback.className = 'feedback correct';
+                    feedback.style.display = 'block';
+                } else {
+                    feedback.textContent = 'Sai. Hãy thử lại!';
+                    feedback.className = 'feedback incorrect';
+                    feedback.style.display = 'block';
+                    allCorrect = false;
+                }
+            });
+            
+            if(allCorrect) {
+                alert('Chúc mừng! Bạn đã hoàn thành tất cả bài tập chính xác.');
+            }
+        }
+        
+        // Hàm kiểm tra bài tập sắp xếp thứ tự
+        function checkOrderingAnswers(exerciseBlock) {
+            const problemItems = exerciseBlock.querySelectorAll('.problem-item');
+            let allCorrect = true;
+            
+            problemItems.forEach(item => {
+                const correctAnswers = JSON.parse(item.getAttribute('data-correct'));
+                const userInputs = item.querySelectorAll('.ordering-inputs input');
+                const feedback = item.querySelector('.feedback');
+                
+                let isCorrect = true;
+                for(let i = 0; i < correctAnswers.length; i++) {
+                    if(i >= userInputs.length || userInputs[i].value.trim().toLowerCase() !== correctAnswers[i].toLowerCase()) {
+                        isCorrect = false;
+                        break;
+                    }
+                }
+                
+                if(isCorrect) {
+                    feedback.textContent = 'Đúng!';
+                    feedback.className = 'feedback correct';
+                    feedback.style.display = 'block';
+                } else {
+                    feedback.textContent = 'Sai. Hãy thử lại!';
+                    feedback.className = 'feedback incorrect';
+                    feedback.style.display = 'block';
+                    allCorrect = false;
+                }
+            });
+            
+            if(allCorrect) {
+                alert('Chúc mừng! Bạn đã hoàn thành tất cả bài tập chính xác.');
+            }
+        }
+    </script>
+</body>
+</html>

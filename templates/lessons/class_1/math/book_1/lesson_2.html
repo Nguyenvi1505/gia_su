@@ -1,0 +1,537 @@
+
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bài 2</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            .lesson-container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            .lesson-section {
+                margin-bottom: 30px;
+                background-color: #fff;
+                border-radius: 8px;
+                padding: 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .exercise-container {
+                margin-bottom: 20px;
+                border: 1px solid #e9ecef;
+                border-radius: 8px;
+                padding: 15px;
+            }
+            .nav-tabs {
+                margin-bottom: 20px;
+            }
+            .answer-input {
+                width: 50px;
+                text-align: center;
+                display: inline-block;
+            }
+            .word-problem {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            .problem-item {
+                padding: 10px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                border: 1px solid #e9ecef;
+            }
+            .problem-item.correct {
+                border: 2px solid #28a745;
+            }
+            .problem-item.incorrect {
+                border: 2px solid #dc3545;
+            }
+            .solution {
+                background-color: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-top: 10px;
+                display: none;
+                border-left: 4px solid #17a2b8;
+                white-space: pre-wrap;
+            }
+            .submit-answers {
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            .show-solutions {
+                margin-top: 10px;
+                display: none;
+            }
+            .explanation-content {
+                margin-left: 0; /* Đảm bảo không có thụt đầu dòng */
+                display: inline-block;
+                white-space: pre-line; /* Giữ đúng định dạng xuống dòng */
+            }
+            .fill-in-blanks-container {
+                margin-bottom: 15px;
+            }
+            .fill-in-blank-input.correct {
+                background-color: #d4edda;
+                border-color: #28a745;
+            }
+            .fill-in-blank-input.incorrect {
+                background-color: #f8d7da;
+                border-color: #dc3545;
+            }
+            .input-group-text {
+                min-width: 120px;
+                display: flex;
+                justify-content: flex-start;
+            }
+            /* Hiển thị đáp án đúng khi nộp bài */
+            .correct-answer {
+                display: none;
+                margin-top: 5px;
+                font-size: 0.9em;
+                color: #28a745;
+            }
+            .problem-image {
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 5px;
+                max-width: 100%;
+                height: auto;
+            }
+            .form-check.correct-choice {
+                background-color: rgba(40, 167, 69, 0.1);
+                border-left: 3px solid #28a745;
+                padding-left: 10px;
+            }
+            .form-check.incorrect-choice {
+                background-color: rgba(220, 53, 69, 0.1);
+                border-left: 3px solid #dc3545;
+                padding-left: 10px;
+            }
+            .multi-choice-options {
+                padding: 10px;
+                border: 1px solid #e9ecef;
+                border-radius: 8px;
+                background-color: #f8f9fa;
+            }
+            .multi-choice-options .row {
+                border-bottom: 1px solid #eee;
+                padding-bottom: 12px;
+                padding-top: 12px;
+            }
+            .multi-choice-options .row:nth-child(even) {
+                background-color: rgba(0,0,0,0.02);
+            }
+            .custom-dropdown.is-valid {
+                border-color: #28a745;
+                background-color: rgba(40, 167, 69, 0.1);
+            }
+            .custom-dropdown.is-invalid {
+                border-color: #dc3545;
+                background-color: rgba(220, 53, 69, 0.1);
+            }
+            .has-success {
+                position: relative;
+            }
+            .has-success::after {
+                content: "✓";
+                position: absolute;
+                right: -20px;
+                color: #28a745;
+                font-weight: bold;
+            }
+            .has-error {
+                position: relative;
+            }
+            .has-error::after {
+                content: "✗";
+                position: absolute;
+                right: -20px;
+                color: #dc3545;
+                font-weight: bold;
+            }
+            .correct-answer {
+                color: #28a745;
+                font-size: 0.875rem;
+                font-style: italic;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="lesson-container">
+            <h1 class="text-center mb-4">Bài 2</h1>
+            
+            <ul class="nav nav-tabs" id="lessonTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="theory-tab" data-bs-toggle="tab" data-bs-target="#theory" type="button" role="tab">
+                        <i class="fas fa-book-open"></i> Lý thuyết
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="exercises-tab" data-bs-toggle="tab" data-bs-target="#exercises" type="button" role="tab">
+                        <i class="fas fa-pencil-alt"></i> Bài tập thực hành
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">
+                        <i class="fas fa-list-check"></i> Tóm tắt bài học
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="tab-content" id="lessonTabContent">
+                <div class="tab-pane fade show active" id="theory" role="tabpanel">
+                    <div class="lesson-section theory-content">
+                        <p>Nội dung l&yacute; thuyết...</p>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="exercises" role="tabpanel">
+                    <div class="lesson-section exercise-content">
+    
+        <div id="all-exercises-container">
+        
+                <div class="exercise-block mb-4" id="exercise-block-0" data-type="comparison">
+                    <h4>So sánh (>,<,=)</h4>
+                    <div class="problems-container">
+                
+                        <div class="problem-item" data-correct=">" id="problem-0-0">
+                            <div class="row align-items-center">
+                                <div class="col-auto">5 + 4</div>
+                                <div class="col-auto">
+                                    <select class="form-select answer-select" style="width: auto">
+                                        <option value="">Chọn</option>
+                                        <option value="<">&lt;</option>
+                                        <option value="=">=</option>
+                                        <option value=">">&gt;</option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">7</div>
+                            </div>
+                            <div class="solution">
+                                <strong>Giải thích:
+</strong> <span class="explanation-content">5 + 4 = 9
+9 > 7</span>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+                <div class="exercise-block mb-4" id="exercise-block-1" data-type="mentalMath">
+                    <h4>Tính nhẩm</h4>
+                    <div class="problems-container">
+                
+                        <div class="problem-item" data-correct="3" id="problem-1-0">
+                            <div class="row align-items-center">
+                                <div class="col">1 + 2 = ?</div>
+                                <div class="col-auto">
+                                    <input type="text" class="form-control answer-input" placeholder="Đáp án">
+                                </div>
+                            </div>
+                            <div class="solution">
+                                <strong>Giải thích:
+</strong> <span class="explanation-content">1 + 2 = 3</span>
+                            </div>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+            <div class="text-center">
+                <button class="btn btn-primary submit-answers" onclick="submitAllAnswers()">
+                    <i class="fas fa-check-circle"></i> Nộp bài
+                </button>
+                <button class="btn btn-info show-solutions" onclick="showAllSolutions()">
+                    <i class="fas fa-lightbulb"></i> Xem tất cả đáp án
+                </button>
+            </div>
+        </div>
+        
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="summary" role="tabpanel">
+                    <div class="lesson-section summary-content">
+                        <p>T&oacute;m tắt b&agrave;i học...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Hàm nộp bài
+            // Cập nhật hàm submitAllAnswers để sửa lỗi kiểm tra bài tập sắp xếp thứ tự
+            function submitAllAnswers() {
+                const problemItems = document.querySelectorAll('.problem-item');
+                let correctCount = 0;
+                let totalProblems = problemItems.length;
+
+                let answersDetail = [];
+                
+                problemItems.forEach((item, index) => {
+                    const blockType = item.closest('.exercise-block')?.getAttribute('data-type');
+                    let isCorrect = false;
+                    let userAnswer = "";
+                    
+                    if (blockType === 'fillInBlanks') {
+                        // Xử lý bài tập điền vào chỗ trống
+                        const inputs = item.querySelectorAll('.fill-in-blank-input');
+                        
+                        // Kiểm tra từng ô nhập
+                        let allInputsCorrect = true;
+                        let atLeastOneCorrect = false;
+                        let userAnswers = [];
+                        
+                        inputs.forEach((input) => {
+                            const inputAnswer = input.value.trim();
+                            userAnswers.push(inputAnswer);
+                            const correctAnswer = input.getAttribute('data-answer') || '';
+                            
+                            // Kiểm tra đáp án
+                            if (inputAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                                input.classList.add('correct');
+                                atLeastOneCorrect = true;
+                            } else {
+                                input.classList.add('incorrect');
+                                allInputsCorrect = false;
+                                
+                                // Hiển thị đáp án đúng
+                                const correctAnswerElement = document.createElement('div');
+                                correctAnswerElement.className = 'correct-answer';
+                                correctAnswerElement.textContent = `Đáp án đúng: ${correctAnswer}`;
+                                input.parentNode.appendChild(correctAnswerElement);
+                            }
+                        });
+                        
+                        isCorrect = allInputsCorrect && inputs.length > 0;
+                        userAnswer = userAnswers.join(', ');
+                        
+                        // Nếu có ít nhất một đáp án đúng, ta đánh dấu bài tập là một phần đúng
+                        if (atLeastOneCorrect && !allInputsCorrect) {
+                            item.classList.add('partially-correct');
+                        }
+                        
+                    } else if (blockType === 'ordering') {
+                        // Xử lý riêng cho bài tập sắp xếp thứ tự
+                        const correctAnswerStr = item.getAttribute('data-correct');
+                        const correctAnswers = JSON.parse(correctAnswerStr);
+                        const orderingSelects = item.querySelectorAll('.ordering-select');
+                        let userSelections = [];
+                        
+                        // Kiểm tra từng lựa chọn có khớp với đáp án không
+                        let allSelectionsCorrect = true;
+                        for (let i = 0; i < correctAnswers.length; i++) {
+                            if (i >= orderingSelects.length) {
+                                allSelectionsCorrect = false;
+                                break;
+                            }
+                            
+                            // Lưu lại giá trị người dùng chọn
+                            userSelections.push(orderingSelects[i].value);
+                            
+                            // Chuyển đổi giá trị để so sánh cùng kiểu dữ liệu
+                            const userValue = orderingSelects[i].value.toString();
+                            const correctValue = correctAnswers[i].toString();
+                            
+                            if (userValue !== correctValue) {
+                                allSelectionsCorrect = false;
+                                break;
+                            }
+                        }
+                        
+                        isCorrect = allSelectionsCorrect;
+                        userAnswer = userSelections.join(', ');
+                        
+                    } else if (blockType === 'imageWordProblemMultiAnswer') {
+                        // Xử lý tương tự như bài tập điền vào chỗ trống
+                        const inputs = item.querySelectorAll('.fill-in-blank-input');
+                        
+                        // Kiểm tra từng ô nhập
+                        let allInputsCorrect = true;
+                        let atLeastOneCorrect = false;
+                        let userAnswers = [];
+                        
+                        inputs.forEach((input) => {
+                            const inputAnswer = input.value.trim();
+                            userAnswers.push(inputAnswer);
+                            const correctAnswer = input.getAttribute('data-answer') || '';
+                            
+                            // Kiểm tra đáp án
+                            if (inputAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                                input.classList.add('correct');
+                                atLeastOneCorrect = true;
+                            } else {
+                                input.classList.add('incorrect');
+                                allInputsCorrect = false;
+                                
+                                // Hiển thị đáp án đúng
+                                const correctAnswerElement = document.createElement('div');
+                                correctAnswerElement.className = 'correct-answer';
+                                correctAnswerElement.textContent = `Đáp án đúng: ${correctAnswer}`;
+                                input.parentNode.appendChild(correctAnswerElement);
+                            }
+                        });
+                        
+                        isCorrect = allInputsCorrect && inputs.length > 0;
+                        userAnswer = userAnswers.join(', ');
+                        
+                        // Nếu có ít nhất một đáp án đúng, ta đánh dấu bài tập là một phần đúng
+                        if (atLeastOneCorrect && !allInputsCorrect) {
+                            item.classList.add('partially-correct');
+                        }
+                        
+                    } else if (blockType === 'imageWordProblemMultiChoice') {
+                        // Xử lý bài tập chọn đáp án sử dụng dropdown tùy chỉnh
+                        const dropdowns = item.querySelectorAll('.custom-dropdown');
+                        
+                        // Kiểm tra từng dropdown
+                        let allCorrect = true;
+                        let userSelections = [];
+                        
+                        dropdowns.forEach((dropdown) => {
+                            const dropdownValue = dropdown.value;
+                            userSelections.push(dropdownValue);
+                            const correctAnswer = dropdown.getAttribute('data-correct');
+                            
+                            if (dropdownValue === correctAnswer) {
+                                dropdown.classList.add('is-valid');
+                                dropdown.parentElement.classList.add('has-success');
+                            } else {
+                                dropdown.classList.add('is-invalid');
+                                dropdown.parentElement.classList.add('has-error');
+                                
+                                // Tạo phần tử hiển thị đáp án đúng
+                                const correctAnswerElem = document.createElement('div');
+                                correctAnswerElem.className = 'correct-answer mt-1';
+                                correctAnswerElem.textContent = `Đáp án đúng: ${correctAnswer}`;
+                                dropdown.parentElement.appendChild(correctAnswerElem);
+                                
+                                allCorrect = false;
+                            }
+                        });
+                        
+                        isCorrect = allCorrect && dropdowns.length > 0;
+                        userAnswer = userSelections.join(', ');
+                        
+                    } else {
+                        // Xử lý các loại bài tập khác (comparison, mentalMath, trueFalse, wordProblem)
+                        const correctAnswer = item.getAttribute('data-correct');
+                        let userInput = '';
+                        
+                        const answerInput = item.querySelector('.answer-input');
+                        const answerSelect = item.querySelector('.answer-select');
+                        
+                        if (answerInput) {
+                            userInput = answerInput.value.trim();
+                            userAnswer = userInput;
+                        } else if (answerSelect) {
+                            userInput = answerSelect.value;
+                            userAnswer = userInput;
+                        }
+                        
+                        isCorrect = userInput.toString().toLowerCase() === correctAnswer.toString().toLowerCase();
+                    }
+                    
+                    // Hiển thị kết quả
+                    if (isCorrect) {
+                        item.classList.add('correct');
+                        correctCount++;
+                    } else {
+                        item.classList.add('incorrect');
+                    }
+
+                    // Lấy thông tin câu hỏi
+                    const problemId = item.getAttribute('id');
+                    const correctAnswer = item.getAttribute('data-correct');
+                    
+                    // Xác định nội dung câu hỏi dựa theo loại bài tập
+                    let problemText = '';
+                    
+                    if (blockType === 'comparison') {
+                        // Xử lý đặc biệt cho bài tập so sánh
+                        const leftSide = item.querySelector('.row .col-auto:nth-child(1)')?.textContent || '';
+                        const rightSide = item.querySelector('.row .col-auto:nth-child(3)')?.textContent || '';
+                        problemText = `${leftSide} ? ${rightSide}`;
+                    } else if (item.querySelector('.word-problem')) {
+                        // Bài toán có lời văn
+                        problemText = item.querySelector('.word-problem').textContent;
+                    } else if (item.querySelector('.col')) {
+                        // Bài tập khác có .col (như mentalMath)
+                        problemText = item.querySelector('.col').textContent;
+                    } else {
+                        // Fallback nếu không tìm thấy
+                        problemText = 'Câu hỏi ' + (index + 1);
+                    }
+                    
+                    // Thêm thông tin chi tiết câu trả lời
+                    answersDetail.push({
+                        problem_id: problemId,
+                        problem_type: blockType,
+                        problem_text: problemText.substring(0, 100) + (problemText.length > 100 ? '...' : ''),
+                        user_answer: userAnswer,
+                        correct_answer: correctAnswer,
+                        is_correct: isCorrect
+                    });
+                });
+
+                // Tính điểm (thang điểm 10)
+                const score = totalProblems > 0 ? (correctCount / totalProblems) * 10 : 0;
+                const roundedScore = Math.round(score * 10) / 10; // Làm tròn đến 1 chữ số thập phân
+                
+                // Gửi điểm về server
+                const urlParams = new URLSearchParams(window.location.search);
+                const classId = urlParams.get('class');
+                const subject = urlParams.get('subject');
+                const book = urlParams.get('book');
+                const lesson = urlParams.get('lesson');
+                
+                fetch('/api/submit_exercises', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        class_id: classId,
+                        subject: subject,
+                        book: book,
+                        lesson: lesson,
+                        score: roundedScore,
+                        answers_detail: answersDetail  // Thêm chi tiết câu trả lời
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Đã gửi điểm:', data);
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi điểm:', error);
+                });
+                
+                // Hiển thị nút xem đáp án và các đáp án đúng
+                document.querySelector('.show-solutions').style.display = 'inline-block';
+                document.querySelectorAll('.correct-answer').forEach(elem => {
+                    elem.style.display = 'block';
+                });
+                
+                // Thông báo kết quả
+                alert(`Bạn đã trả lời đúng ${correctCount}/${totalProblems} câu hỏi.`);
+            }
+
+            function showAllSolutions() {
+                const solutions = document.querySelectorAll('.solution');
+                solutions.forEach(solution => {
+                    solution.style.display = 'block';
+                });
+            }
+        </script>
+    </body>
+    </html>
+    

@@ -1,0 +1,38 @@
+{
+    "title": "Bài 2",
+    "sections": {
+        "theory": {
+            "content": "<p>Nội dung l&yacute; thuyết...</p>"
+        },
+        "exercises": {
+            "exerciseBlocks": [
+                {
+                    "type": "comparison",
+                    "title": "So sánh (>,<,=)",
+                    "problems": [
+                        {
+                            "leftSide": "5 + 4",
+                            "correctAnswer": ">",
+                            "rightSide": "7",
+                            "explanation": "5 + 4 = 9\n9 > 7"
+                        }
+                    ]
+                },
+                {
+                    "type": "mentalMath",
+                    "title": "Tính nhẩm",
+                    "problems": [
+                        {
+                            "question": "1 + 2 = ?",
+                            "correctAnswer": "3",
+                            "explanation": "1 + 2 = 3"
+                        }
+                    ]
+                }
+            ]
+        },
+        "summary": {
+            "content": "<p>T&oacute;m tắt b&agrave;i học...</p>"
+        }
+    }
+}
